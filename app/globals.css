@@ -1,0 +1,221 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: #080b10;
+}
+
+main {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ===========================
+   Quadrant Menu
+=========================== */
+
+.quadrant-menu {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  background: #080b10;
+  overflow: hidden;
+}
+
+.quadrant {
+  appearance: none;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.02);
+  color: white;
+  font: inherit;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform 300ms ease,
+    opacity 300ms ease,
+    border-color 300ms ease,
+    border-radius 300ms ease;
+}
+
+.quadrant::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  background: radial-gradient(
+    circle,
+    rgba(80, 180, 255, calc(0.08 + var(--drag-intensity) * 0.22)) 0%,
+    rgba(80, 180, 255, calc(0.04 + var(--drag-intensity) * 0.12)) 35%,
+    transparent 72%
+  );
+  filter: blur(28px);
+  opacity: var(--drag-intensity);
+  transition: opacity 120ms linear;
+  pointer-events: none;
+}
+
+.quadrant.active {
+  transform: scale(calc(1 + var(--drag-intensity) * 0.035));
+  border-radius: calc(var(--drag-intensity) * 18px);
+  border-color: rgba(80, 180, 255, calc(0.2 + var(--drag-intensity) * 0.5));
+  z-index: 2;
+}
+
+.quadrant.active::before {
+  opacity: 1;
+}
+
+.quadrant.inactive {
+  transform: scale(0.985);
+  opacity: 0.55;
+}
+
+.quadrant-label,
+.quadrant-description {
+  position: relative;
+  z-index: 1;
+}
+
+.quadrant-label {
+  font-size: clamp(1.5rem, 3vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.quadrant-description {
+  max-width: 28ch;
+  font-size: clamp(0.875rem, 1.2vw, 1.15rem);
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 300ms ease,
+    transform 300ms ease;
+  text-align: center;
+}
+
+.quadrant.active .quadrant-description {
+  opacity: calc(var(--drag-intensity) * 0.75);
+  transform: translateY(calc(8px - var(--drag-intensity) * 8px));
+}
+
+/* ===========================
+   Center Node
+=========================== */
+.center-node-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 86px;
+  height: 86px;
+  margin-left: -43px;
+  margin-top: -43px;
+  z-index: 5;
+}
+
+.center-node {
+  appearance: none;
+  width: 86px;
+  height: 86px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(80, 180, 255, 0.7);
+  background: rgba(80, 180, 255, calc(0.7 + var(--node-intensity) * 0.3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  box-shadow:
+    0 0 calc(24px + var(--node-intensity) * 28px) rgba(80, 180, 255, calc(0.28 + var(--node-intensity) * 0.32)),
+    inset 0 0 calc(18px + var(--node-intensity) * 18px) rgba(80, 180, 255, calc(0.14 + var(--node-intensity) * 0.22));
+}
+
+.center-node::before {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  border-radius: inherit;
+  border: 1px solid rgba(80, 180, 255, 0.18);
+  pointer-events: none;
+}
+
+.center-node:active {
+  cursor: grabbing;
+}
+
+.center-node-label {
+ color: rgba(255, 255, 255, calc(0.85 + var(--node-intensity) * 0.15));
+ text-shadow: 0 0 calc(var(--node-intensity) * 12px) rgba(80, 180, 255, 0.9);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===========================
+   Connection Lines
+=========================== */
+
+
+.connection-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.connection-line {
+  stroke: rgba(80, 180, 255, 0.08);
+  stroke-width: 0.16;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 2 4;
+  animation: none;
+  transition:
+    opacity 120ms linear,
+    stroke 120ms linear,
+    filter 120ms linear;
+}
+
+.connection-line.active {
+  opacity: calc(0.25 + var(--line-intensity) * 0.75);
+  stroke: rgba(80, 180, 255, calc(0.25 + var(--line-intensity) * 0.75));
+  filter: drop-shadow(
+    0 0 calc(var(--line-intensity) * 10px)
+    rgba(80, 180, 255, 0.95)
+  );
+  animation: energy-flow 700ms linear infinite;
+  animation-duration: calc(1200ms - var(--line-intensity) * 700ms);
+}
+
+@keyframes energy-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -24;
+  }
+}
