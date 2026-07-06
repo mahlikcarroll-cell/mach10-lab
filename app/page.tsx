@@ -1,9 +1,10 @@
-import QuadrantMenu from "@/components/QuadrantMenu";
+import Mach10Menu from "@/components/Mach10Menu";
 
 export default function Home() {
   return (
     <main>
-      <QuadrantMenu />
+      <Mach10Menu />
     </main>
   );
 }
+

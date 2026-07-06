@@ -33,7 +33,7 @@ main {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   background: #080b10;
-  overflow: hidden;
+   overflow: visible;
 }
 
 .quadrant {
@@ -131,21 +131,36 @@ main {
   z-index: 1;
 }
 /* ===========================
-   Center Node
+   Center Node / Menu Puck
 =========================== */
+
 .center-node-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  display: none;
+}
+
+.menu-puck-shell {
+  position: fixed;
+  z-index: 1100;
   width: 86px;
-  height: 86px;
-  margin-left: -43px;
-  margin-top: -43px;
-  z-index: 5;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.menu-puck-shell.open {
+  translate: -50% -50%;
+}
+
+.menu-puck-shell.closed {
+  translate: 0 0;
 }
 
 .center-node {
   appearance: none;
+  opacity: 1;
+  position: relative;
   width: 86px;
   height: 86px;
   padding: 0;
@@ -176,16 +191,6 @@ main {
   cursor: grabbing;
 }
 
-.center-node-label {
- color: rgba(255, 255, 255, calc(0.85 + var(--node-intensity) * 0.15));
- text-shadow: 0 0 calc(var(--node-intensity) * 12px) rgba(80, 180, 255, 0.9);
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  position: relative;
-  z-index: 1;
-}
-
 .center-node-icon {
   width: 42px;
   height: 42px;
@@ -196,6 +201,14 @@ main {
     0 0 calc(var(--node-intensity) * 12px)
     rgba(80, 180, 255, 0.9)
   );
+}
+
+.floating-menu-label {
+  margin-top: 0.35rem;
+  color: white;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
 }
 
 /* ===========================
@@ -299,4 +312,100 @@ main {
       saturate(calc(1 + var(--blueprint-intensity) * 0.65))
       contrast(calc(1 + var(--blueprint-intensity) * 0.25));
   }
+}
+
+/* ===========================
+   Pop up button
+=========================== */
+
+
+
+
+.floating-menu-button {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 100;
+  background: transparent;
+  border: 0;
+  color: white;
+  cursor: pointer;
+}
+
+.floating-menu-icon {
+  width: 54px;
+  height: 54px;
+  display: block;
+}
+
+.floating-menu-label {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.mach10-menu-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(5, 8, 12, .82);
+  backdrop-filter: blur(10px);
+
+  z-index: 999;
+}
+
+.mach10-menu-close {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 110;
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.mach10-menu-content {
+  width: min(88vw, 1200px);
+  height: min(88vh, 800px);
+  padding: 3rem;
+   overflow: visible;
+
+  margin: auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-puck-shell {
+  position: fixed;
+  z-index: 9999;
+  width: 86px;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+.menu-puck-shell.open {
+  translate: -50% -50%;
+}
+
+.menu-puck-shell.closed {
+  translate: 0 0;
+}
+
+.mach10-menu-content {
+  transform-origin: center center;
 }

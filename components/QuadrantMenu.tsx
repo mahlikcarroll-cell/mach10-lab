@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,6 +7,16 @@ import ConnectionLines from "@/components/ConnectionLines";
 import Link from "next/link";
 import Blueprint from "@/components/blueprint";
 import { Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
+
+type QuadrantMenuProps = {
+  activeQuadrant: string | null;
+  previousQuadrant: string | null;
+  dragIntensity: number;
+  nodePosition: {
+    x: number;
+    y: number;
+  };
+};
 
 const quadrants = [
   {
@@ -35,63 +46,51 @@ const quadrants = [
   
 ];
 
-export default function QuadrantMenu() {
-  const [activeQuadrant, setActiveQuadrant] = useState<string | null>(null);
-  const [previousQuadrant, setPreviousQuadrant] = useState<string | null>(null);
-  const [dragIntensity, setDragIntensity] = useState(0);
-  const [nodePosition, setNodePosition] = useState({ x: 0, y: 0 });
-  useEffect(() => {
-  if (!activeQuadrant) return;
-
-  setPreviousQuadrant(activeQuadrant);
-
-  const timer = setTimeout(() => {
-    setPreviousQuadrant(null);
-  }, 150);
-
-  return () => clearTimeout(timer);
-}, [activeQuadrant]);
+export default function QuadrantMenu({
+  activeQuadrant,
+  previousQuadrant,
+  dragIntensity,
+  nodePosition,
+}: QuadrantMenuProps) {
   return (
     <section className="quadrant-menu">
-        <ConnectionLines
-  dragIntensity={dragIntensity}
-  nodePosition={nodePosition}
-/>
-        
-        <CenterNode
-  setActiveQuadrant={setActiveQuadrant}
-  setDragIntensity={setDragIntensity}
-  setNodePosition={setNodePosition}
-/>
+      <ConnectionLines
+        dragIntensity={dragIntensity}
+        nodePosition={nodePosition}
+      />
 
       {quadrants.map((quadrant) => {
-  const isActive =
-    activeQuadrant === quadrant.id || previousQuadrant === quadrant.id;
+        const isActive =
+          activeQuadrant === quadrant.id || previousQuadrant === quadrant.id;
 
-  return ( <Link
-        key={quadrant.id}
-        href={quadrant.href}
-  className={`quadrant ${
-    activeQuadrant === quadrant.id ? "active" : ""
-  } ${activeQuadrant && activeQuadrant !== quadrant.id ? "inactive" : ""}`}
-  style={
-    {
-      "--drag-intensity":
-        activeQuadrant === quadrant.id ? dragIntensity : 0,
-    } as React.CSSProperties
-  }
->
-          <Blueprint
-  quadrantId={quadrant.id}
-  nodePosition={nodePosition}
-  dragIntensity={dragIntensity}
-  active={isActive}
-/>
-          <span className="quadrant-label">{quadrant.title}</span>
-          <span className="quadrant-description">{quadrant.description}</span>
-        </Link>
+        return (
+          <Link
+            key={quadrant.id}
+            href={quadrant.href}
+            className={`quadrant ${isActive ? "active" : ""} ${
+              activeQuadrant && !isActive ? "inactive" : ""
+            }`}
+            style={
+              {
+                "--drag-intensity":
+                  activeQuadrant === quadrant.id ? dragIntensity : 0,
+              } as React.CSSProperties
+            }
+          >
+            <Blueprint
+              quadrantId={quadrant.id}
+              nodePosition={nodePosition}
+              dragIntensity={dragIntensity}
+              active={isActive}
+            />
+
+            <span className="quadrant-label">{quadrant.title}</span>
+            <span className="quadrant-description">
+              {quadrant.description}
+            </span>
+          </Link>
         );
-})}
+      })}
     </section>
   );
 }
