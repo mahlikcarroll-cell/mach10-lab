@@ -1,6 +1,6 @@
 "use client";
 
-import { animate, motion, useMotionValue } from "motion/react";
+import { animate, motion, useMotionValue, type MotionStyle } from "motion/react";
 import { useState } from "react";
 type CenterNodeProps = {
   setActiveQuadrant: (quadrant: string | null) => void;
@@ -70,11 +70,13 @@ export default function CenterNode({
   dragConstraints={{ top: 0, right: 0, bottom: 0, left: 0 }}
   dragElastic={0.58}
   dragMomentum={false}
-  style={{
+ style={
+  {
     x,
     y,
     "--node-intensity": localIntensity,
-  } as React.CSSProperties}
+  } as MotionStyle
+}
   onDrag={updateDragState}
   onDragEnd={resetNode}
   whileDrag={{ scale: 1.08 }}

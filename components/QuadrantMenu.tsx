@@ -4,6 +4,7 @@ import { useState } from "react";
 import CenterNode from "@/components/CenterNode";
 import ConnectionLines from "@/components/ConnectionLines";
 import Link from "next/link";
+import Blueprint from "@/components/blueprint";
 
 const quadrants = [
   {
@@ -63,6 +64,7 @@ export default function QuadrantMenu() {
     } as React.CSSProperties
   }
 >
+          <Blueprint nodePosition={nodePosition}dragIntensity={dragIntensity}/>
           <span className="quadrant-label">{quadrant.title}</span>
           <span className="quadrant-description">{quadrant.description}</span>
         </Link>
