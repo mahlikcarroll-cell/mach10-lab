@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CenterNode from "@/components/CenterNode";
 import ConnectionLines from "@/components/ConnectionLines";
 import Link from "next/link";
 import Blueprint from "@/components/blueprint";
+import { Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
 
 const quadrants = [
   {
@@ -31,12 +32,25 @@ const quadrants = [
     description: "Structured data, automations, and AI-ready paths.",
     href: "/ai-infrastructure",
   },
+  
 ];
 
 export default function QuadrantMenu() {
   const [activeQuadrant, setActiveQuadrant] = useState<string | null>(null);
+  const [previousQuadrant, setPreviousQuadrant] = useState<string | null>(null);
   const [dragIntensity, setDragIntensity] = useState(0);
   const [nodePosition, setNodePosition] = useState({ x: 0, y: 0 });
+  useEffect(() => {
+  if (!activeQuadrant) return;
+
+  setPreviousQuadrant(activeQuadrant);
+
+  const timer = setTimeout(() => {
+    setPreviousQuadrant(null);
+  }, 150);
+
+  return () => clearTimeout(timer);
+}, [activeQuadrant]);
   return (
     <section className="quadrant-menu">
         <ConnectionLines
@@ -50,8 +64,11 @@ export default function QuadrantMenu() {
   setNodePosition={setNodePosition}
 />
 
-      {quadrants.map((quadrant) => (
-        <Link
+      {quadrants.map((quadrant) => {
+  const isActive =
+    activeQuadrant === quadrant.id || previousQuadrant === quadrant.id;
+
+  return ( <Link
         key={quadrant.id}
         href={quadrant.href}
   className={`quadrant ${
@@ -64,11 +81,17 @@ export default function QuadrantMenu() {
     } as React.CSSProperties
   }
 >
-          <Blueprint nodePosition={nodePosition}dragIntensity={dragIntensity}/>
+          <Blueprint
+  quadrantId={quadrant.id}
+  nodePosition={nodePosition}
+  dragIntensity={dragIntensity}
+  active={isActive}
+/>
           <span className="quadrant-label">{quadrant.title}</span>
           <span className="quadrant-description">{quadrant.description}</span>
         </Link>
-      ))}
+        );
+})}
     </section>
   );
 }

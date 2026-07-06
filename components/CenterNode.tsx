@@ -1,7 +1,7 @@
 "use client";
 
 import { animate, motion, useMotionValue, type MotionStyle } from "motion/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 type CenterNodeProps = {
   setActiveQuadrant: (quadrant: string | null) => void;
   setDragIntensity: (intensity: number) => void;
@@ -15,6 +15,7 @@ export default function CenterNode({
 }: CenterNodeProps) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  const lastQuadrant = useRef<string | null>(null);
   const [localIntensity, setLocalIntensity] = useState(0);
   function updateDragState() {
     const currentX = x.get();
@@ -27,20 +28,24 @@ export default function CenterNode({
     setDragIntensity(intensity);
     setLocalIntensity(intensity);
 
-    if (distance < 20) {
-      setActiveQuadrant(null);
-      return;
-    }
+let nextQuadrant: string | null = null;
 
-    if (currentX < 0 && currentY < 0) {
-      setActiveQuadrant("lead-systems");
-    } else if (currentX > 0 && currentY < 0) {
-      setActiveQuadrant("websites");
-    } else if (currentX < 0 && currentY > 0) {
-      setActiveQuadrant("video-motion");
-    } else if (currentX > 0 && currentY > 0) {
-      setActiveQuadrant("ai-infrastructure");
-    }
+if (distance >= 20) {
+  if (currentX < 0 && currentY < 0) {
+    nextQuadrant = "lead-systems";
+  } else if (currentX > 0 && currentY < 0) {
+    nextQuadrant = "websites";
+  } else if (currentX < 0 && currentY > 0) {
+    nextQuadrant = "video-motion";
+  } else if (currentX > 0 && currentY > 0) {
+    nextQuadrant = "ai-infrastructure";
+  }
+}
+
+if (nextQuadrant !== lastQuadrant.current) {
+  lastQuadrant.current = nextQuadrant;
+  setActiveQuadrant(nextQuadrant);
+}
   }
 
   function resetNode() {
@@ -48,6 +53,7 @@ export default function CenterNode({
     setDragIntensity(0);
     setLocalIntensity(0);
     setNodePosition({ x: 0, y: 0 });
+    lastQuadrant.current = null;
     
     animate(x, 0, {
       type: "spring",
@@ -81,7 +87,11 @@ export default function CenterNode({
   onDragEnd={resetNode}
   whileDrag={{ scale: 1.08 }}
 >
-        <span className="center-node-label">M10</span>
+        <img
+  className="center-node-icon"
+  src="/images/mach10-icon.svg"
+  alt="Mach10"
+/>
       </motion.button>
     </div>
   );

@@ -8,10 +8,12 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
+  font-family: var(--font-display), sans-serif;
 }
 
 body {
   background: #080b10;
+  font-family: var(--font-display), sans-serif;
 }
 
 main {
@@ -104,6 +106,7 @@ main {
 .quadrant-description {
   max-width: 28ch;
   font-size: clamp(0.875rem, 1.2vw, 1.15rem);
+    font-family: var(--font-mono), monospace;
   line-height: 1.4;
   opacity: 0;
   transform: translateY(8px);
@@ -116,24 +119,6 @@ main {
 .quadrant.active .quadrant-description {
   opacity: calc(var(--drag-intensity) * 0.75);
   transform: translateY(calc(8px - var(--drag-intensity) * 8px));
-}
-
-.blueprint-grid {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: calc(0.08 + var(--drag-intensity) * 0.22);
-  background-image:
-    linear-gradient(rgba(80, 180, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(80, 180, 255, 0.08) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: radial-gradient(
-    circle,
-    black 0%,
-    black 38%,
-    transparent 78%
-  );
-  transition: opacity 180ms linear;
 }
 
 .quadrant.active .blueprint-grid {
@@ -201,6 +186,18 @@ main {
   z-index: 1;
 }
 
+.center-node-icon {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(
+    0 0 calc(var(--node-intensity) * 12px)
+    rgba(80, 180, 255, 0.9)
+  );
+}
+
 /* ===========================
    Connection Lines
 =========================== */
@@ -226,49 +223,80 @@ main {
     filter 120ms linear;
 }
 
-/*.connection-line.active {
-  opacity: calc(0.25 + var(--line-intensity) * 0.75);
-  stroke: rgba(80, 180, 255, calc(0.25 + var(--line-intensity) * 0.75));
-  filter: drop-shadow(
-    0 0 calc(var(--line-intensity) * 10px)
-    rgba(80, 180, 255, 0.95)
-  );
-  animation: energy-flow 700ms linear infinite;
-  animation-duration: calc(1200ms - var(--line-intensity) * 700ms);
-}
-
-@keyframes energy-flow {
-  from {
-    stroke-dashoffset: 0;
-  }
-
-  to {
-    stroke-dashoffset: -24;
-  }
-}
-*/
+/* ===========================
+   Blueprint Effect
+=========================== */
 .blueprint {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    opacity: .08;
-    z-index: 0;
-    outline: 2px solid red;
-background: rgba(255, 0, 0, 0.2);
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.blueprint-base,
+.blueprint-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .blueprint-base {
-  opacity: 0.25;
-  filter: brightness(0.45) saturate(0.8);
+  opacity: var(--blueprint-base-opacity);
 }
 
-.blueprint-energy {
-  opacity: calc(var(--blueprint-intensity) * 1);
-  filter: drop-shadow(
-    0 0 calc(var(--blueprint-intensity) * 10px)
-    rgba(80, 180, 255, 0.95)
+.blueprint-lines {
+  opacity: 0;
+  display: none;
+  transition: opacity 220ms ease;
+  will-change: opacity;
+  contain: paint;
+}
+
+.quadrant.active .blueprint-lines {
+  display: block;
+}
+
+.blueprint-lines path {
+  stroke-width: calc(1.2px + var(--blueprint-intensity) * 0.8px);
+}
+
+.quadrant.active .blueprint-lines {
+  display: block;
+
+  opacity: calc(0.15 + var(--blueprint-intensity) * 0.85);
+
+  filter: none;
+
+  mask-image: radial-gradient(
+    circle at var(--spotlight-x) var(--spotlight-y),
+    black 0%,
+    black 18%,
+    transparent var(--spotlight-size)
   );
-  pointer-events: none;
+
+  animation: blueprint-shimmer 2.8s ease-in-out infinite;
+}
+
+@keyframes blueprint-shimmer {
+  0%,
+  100% {
+    filter:
+      brightness(calc(1 + var(--blueprint-intensity) * 0.9))
+      saturate(calc(1 + var(--blueprint-intensity) * 0.5))
+      contrast(calc(1 + var(--blueprint-intensity) * 0.15));
+  }
+
+  50% {
+    filter:
+      brightness(calc(1 + var(--blueprint-intensity) * 1.05))
+      saturate(calc(1 + var(--blueprint-intensity) * 0.65))
+      contrast(calc(1 + var(--blueprint-intensity) * 0.25));
+  }
 }
