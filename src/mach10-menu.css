@@ -1,29 +1,9 @@
-* {
+.mach10-menu-overlay,
+.mach10-menu-overlay *,
+.menu-puck-shell,
+.menu-puck-shell * {
   box-sizing: border-box;
 }
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: var(--font-display), sans-serif;
-}
-
-body {
-  background: #080b10;
-  font-family: var(--font-display), sans-serif;
-}
-
-main {
-  width: 100%;
-  min-height: 100vh;
-}
-
-/* ===========================
-   Quadrant Menu
-=========================== */
 
 .quadrant-menu {
   position: relative;
@@ -33,7 +13,7 @@ main {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   background: #080b10;
-   overflow: visible;
+  overflow: visible;
 }
 
 .quadrant {
@@ -106,8 +86,8 @@ main {
 
 .quadrant-description {
   max-width: 28ch;
+  font-family: monospace;
   font-size: clamp(0.875rem, 1.2vw, 1.15rem);
-    font-family: var(--font-mono), monospace;
   line-height: 1.4;
   opacity: 0;
   transform: translateY(8px);
@@ -126,28 +106,17 @@ main {
   opacity: calc(0.12 + var(--drag-intensity) * 0.38);
 }
 
-.quadrant-label,
-.quadrant-description {
-  position: relative;
-  z-index: 1;
-}
-/* ===========================
-   Center Node / Menu Puck
-=========================== */
-
-.center-node-wrapper {
-  display: none;
-}
-
 .menu-puck-shell {
   position: fixed;
-  z-index: 1100;
+  z-index: 9999;
   width: 86px;
   height: 110px;
   display: flex;
   flex-direction: column;
   align-items: center;
   pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
 }
 
 .center-node {
@@ -197,17 +166,13 @@ main {
 }
 
 .floating-menu-label {
+  display: block;
   margin-top: 0.35rem;
   color: white;
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
 }
-
-/* ===========================
-   Connection Lines
-=========================== */
-
 
 .connection-lines {
   position: absolute;
@@ -229,9 +194,6 @@ main {
     filter 120ms linear;
 }
 
-/* ===========================
-   Blueprint Effect
-=========================== */
 .blueprint {
   position: absolute;
   inset: 0;
@@ -267,27 +229,19 @@ main {
 
 .quadrant.active .blueprint-lines {
   display: block;
-}
-
-.blueprint-lines path {
-  stroke-width: calc(1.2px + var(--blueprint-intensity) * 0.8px);
-}
-
-.quadrant.active .blueprint-lines {
-  display: block;
-
   opacity: calc(0.15 + var(--blueprint-intensity) * 0.85);
-
   filter: none;
-
   mask-image: radial-gradient(
     circle at var(--spotlight-x) var(--spotlight-y),
     black 0%,
     black 18%,
     transparent var(--spotlight-size)
   );
-
   animation: blueprint-shimmer 2.8s ease-in-out infinite;
+}
+
+.blueprint-lines path {
+  stroke-width: calc(1.2px + var(--blueprint-intensity) * 0.8px);
 }
 
 @keyframes blueprint-shimmer {
@@ -307,69 +261,21 @@ main {
   }
 }
 
-/* ===========================
-   Pop up button
-=========================== */
-
-
-
-
-.floating-menu-button {
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
-  z-index: 100;
-  background: transparent;
-  border: 0;
-  color: white;
-  cursor: pointer;
-}
-
-.floating-menu-icon {
-  width: 54px;
-  height: 54px;
-  display: block;
-}
-
-.floating-menu-label {
-  display: block;
-  margin-top: 0.35rem;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-}
-
 .mach10-menu-overlay {
   position: fixed;
   inset: 0;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   z-index: 999;
-}
-
-.mach10-menu-close {
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
-  z-index: 110;
-  background: transparent;
-  border: 0;
-  color: white;
-  font-size: 2rem;
-  cursor: pointer;
 }
 
 .mach10-menu-content {
   width: min(88vw, 1200px);
   height: min(88vh, 800px);
   padding: 3rem;
-   overflow: visible;
-
+  overflow: visible;
   margin: auto;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -380,22 +286,6 @@ main {
     0 28px 80px rgba(0, 0, 0, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(16px) saturate(1.12);
-}
-
-.menu-puck-shell {
-  position: fixed;
-  z-index: 9999;
-  width: 86px;
-  height: 110px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  pointer-events: auto;
-  opacity: 1;
-  visibility: visible;
-}
-
-.mach10-menu-content {
   transform-origin: center center;
 }
 

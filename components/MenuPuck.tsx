@@ -3,6 +3,7 @@
 import { animate, motion, useMotionValue } from "motion/react";
 import type { MotionStyle } from "motion/react";
 import { useRef, useState } from "react";
+import { getMach10AssetUrl } from "@/components/mach10AssetUrl";
 
 type NodeStyle = MotionStyle & {
   "--node-intensity": number;
@@ -155,7 +156,7 @@ export default function MenuPuck({
       >
         <img
           className="center-node-icon"
-          src="/images/mach10-icon.svg"
+          src={getMach10AssetUrl("/images/mach10-icon.svg")}
           alt=""
           aria-hidden="true"
         />

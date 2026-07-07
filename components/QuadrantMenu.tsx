@@ -2,7 +2,6 @@
 "use client";
 
 import ConnectionLines from "@/components/ConnectionLines";
-import Link from "next/link";
 import Blueprint from "@/components/blueprint";
 
 type QuadrantMenuProps = {
@@ -13,6 +12,7 @@ type QuadrantMenuProps = {
     x: number;
     y: number;
   };
+  onNavigate?: (href: string) => void;
 };
 
 const quadrants = [
@@ -48,6 +48,7 @@ export default function QuadrantMenu({
   previousQuadrant,
   dragIntensity,
   nodePosition,
+  onNavigate,
 }: QuadrantMenuProps) {
   return (
     <section className="quadrant-menu">
@@ -61,9 +62,15 @@ export default function QuadrantMenu({
           activeQuadrant === quadrant.id || previousQuadrant === quadrant.id;
 
         return (
-          <Link
+          <a
             key={quadrant.id}
             href={quadrant.href}
+            onClick={(event) => {
+              if (!onNavigate) return;
+
+              event.preventDefault();
+              onNavigate(quadrant.href);
+            }}
             className={`quadrant ${isActive ? "active" : ""} ${
               activeQuadrant && !isActive ? "inactive" : ""
             }`}
@@ -85,7 +92,7 @@ export default function QuadrantMenu({
             <span className="quadrant-description">
               {quadrant.description}
             </span>
-          </Link>
+          </a>
         );
       })}
     </section>

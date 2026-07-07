@@ -1,5 +1,7 @@
 
 
+import { getMach10AssetUrl } from "@/components/mach10AssetUrl";
+
 type BlueprintProps = {
   quadrantId: string;
   nodePosition: {
@@ -58,14 +60,14 @@ const spotlightSize = 18 + intensity * 28;
     >
       <img
         className="blueprint-base"
-        src="/blueprint-base.svg"
+        src={getMach10AssetUrl("/blueprint-base.svg")}
         alt=""
         aria-hidden="true"
       />
 
       <img
         className="blueprint-lines"
-        src="/blueprint-lines.svg"
+        src={getMach10AssetUrl("/blueprint-lines.svg")}
         alt=""
         aria-hidden="true"
       />

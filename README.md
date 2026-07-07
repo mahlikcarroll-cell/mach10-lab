@@ -34,3 +34,35 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## WordPress / Divi Menu Bundle
+
+Build the standalone Mach10 menu bundle without iframing the Next.js app:
+
+```bash
+npm run build:wp-menu
+```
+
+The WordPress-ready files are emitted to `dist/wp-menu/`:
+
+- `mach10-menu.js`
+- `mach10-menu.css`
+- copied public assets, including `images/mach10-icon.svg`, `blueprint-base.svg`, and `blueprint-lines.svg`
+
+Add this mount point in a Divi Code Module or theme template:
+
+```html
+<div id="mach10-menu-root"></div>
+```
+
+Enqueue `mach10-menu.css` and `mach10-menu.js` from WordPress. If the copied assets live beside the bundle files, add this before the script tag or localize the same value from PHP:
+
+```html
+<script>
+  window.Mach10MenuConfig = {
+    assetBase: "/wp-content/uploads/mach10-menu",
+  };
+</script>
+```
+
+The script automatically finds `#mach10-menu-root` and renders the menu. Navigation uses normal browser URLs in WordPress, so the quadrant links should point to matching WordPress paths such as `/lead-systems`.
