@@ -1,86 +1,131 @@
 "use client";
 
-import { useEffect, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import QuadrantMenu from "@/components/QuadrantMenu";
 import MenuPuck from "@/components/MenuPuck";
 import { motion } from "motion/react";
+import { useRouter } from "next/navigation";
 
 export default function Mach10Menu() {
-const [isOpen, setIsOpen] = useState(false);
-const [isMenuVisible, setIsMenuVisible] = useState(false);
-const [activeQuadrant, setActiveQuadrant] = useState<string | null>(null);
-const [previousQuadrant, setPreviousQuadrant] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [activeQuadrant, setActiveQuadrant] = useState<string | null>(null);
+  const [previousQuadrant, setPreviousQuadrant] = useState<string | null>(null);
+  const router = useRouter();
+  const [dragIntensity, setDragIntensity] = useState(0);
+  const [nodePosition, setNodePosition] = useState({ x: 0, y: 0 });
+  const previousQuadrantTimer = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
 
-const [dragIntensity, setDragIntensity] = useState(0);
-const [nodePosition, setNodePosition] = useState({ x: 0, y: 0 });
-  
+  function handleNavigate(href: string) {
+    closeMenu();
+
+    setTimeout(() => {
+      router.push(href);
+    }, 520);
+  }
 
   useEffect(() => {
-    if (!activeQuadrant) return;
+    return () => {
+      if (previousQuadrantTimer.current) {
+        clearTimeout(previousQuadrantTimer.current);
+      }
+    };
+  }, []);
 
-    setPreviousQuadrant(activeQuadrant);
+  function handleActiveQuadrantChange(nextQuadrant: string | null) {
+    setActiveQuadrant(nextQuadrant);
 
-    const timer = setTimeout(() => {
+    if (previousQuadrantTimer.current) {
+      clearTimeout(previousQuadrantTimer.current);
+    }
+
+    if (!nextQuadrant) {
+      setPreviousQuadrant(null);
+      return;
+    }
+
+    setPreviousQuadrant(nextQuadrant);
+    previousQuadrantTimer.current = setTimeout(() => {
       setPreviousQuadrant(null);
     }, 150);
-
-    return () => clearTimeout(timer);
-  }, [activeQuadrant]);
+  }
 
   function closeMenu() {
-  setIsOpen(false);
-  setActiveQuadrant(null);
-  setPreviousQuadrant(null);
-  setDragIntensity(0);
-  setNodePosition({ x: 0, y: 0 });
+    setIsOpen(false);
+    setActiveQuadrant(null);
+    setPreviousQuadrant(null);
+    if (previousQuadrantTimer.current) {
+      clearTimeout(previousQuadrantTimer.current);
+    }
+    setDragIntensity(0);
+    setNodePosition({ x: 0, y: 0 });
 
-  setTimeout(() => {
-    setIsMenuVisible(false);
-  }, 420);
-}
+    setTimeout(() => {
+      setIsMenuVisible(false);
+    }, 420);
+  }
 
   return (
-  <>
-    <MenuPuck
-      isOpen={isMenuVisible}
-      setIsOpen={(open) => {
-        if (open) {
-          setIsMenuVisible(true);
-          setIsOpen(true);
-        }
-      }}
-      setActiveQuadrant={setActiveQuadrant}
-      setDragIntensity={setDragIntensity}
-      setNodePosition={setNodePosition}
-    />
-
-    {isMenuVisible && (
-      <div className="mach10-menu-overlay" onClick={closeMenu}>
-        <motion.div
-          className="mach10-menu-content"
-          onClick={(e) => e.stopPropagation()}
-          initial={{ opacity: 0, scale: 0.18 }}
-          animate={
-            isOpen
-              ? { opacity: 1, scale: 1 }
-              : { opacity: 0, scale: 0.18 }
+    <>
+      <MenuPuck
+        isOpen={isMenuVisible}
+        setIsOpen={(open) => {
+          if (open) {
+            setIsMenuVisible(true);
+            setIsOpen(true);
           }
-          transition={{
-            delay: isOpen ? 0.42 : 0,
-            type: "spring",
-            stiffness: 150,
-            damping: 20,
-          }}
-        >
-          <QuadrantMenu
-            activeQuadrant={activeQuadrant}
-            previousQuadrant={previousQuadrant}
-            dragIntensity={dragIntensity}
-            nodePosition={nodePosition}
-          />
+        }}
+        setActiveQuadrant={handleActiveQuadrantChange}
+        setDragIntensity={setDragIntensity}
+        setNodePosition={setNodePosition}
+        onNavigate={handleNavigate}
+      />
+
+      {isMenuVisible && (
+        <motion.div
+  className="mach10-menu-overlay"
+  onClick={closeMenu}
+  initial={false}
+  animate={{
+    backgroundColor: isOpen
+      ? "rgba(5, 8, 12, 0.08)"
+      : "rgba(5, 8, 12, 0)",
+    backdropFilter: isOpen
+      ? "blur(3px)"
+      : "blur(0px)",
+  }}
+  transition={{
+    duration: 0.25,
+    ease: "easeOut",
+  }}
+>
+  <motion.div
+    className="mach10-menu-content"
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, scale: 0.18 }}
+            animate={
+              isOpen
+                ? { opacity: 1, scale: 1 }
+                : { opacity: 0, scale: 0.18 }
+            }
+            transition={{
+              delay: isOpen ? 0.42 : 0,
+              type: "spring",
+              stiffness: 150,
+              damping: 20,
+            }}
+          >
+            <QuadrantMenu
+              activeQuadrant={activeQuadrant}
+              previousQuadrant={previousQuadrant}
+              dragIntensity={dragIntensity}
+              nodePosition={nodePosition}
+            />
+          </motion.div>
         </motion.div>
-      </div>
-    )}
-  </>
-);
+      )}
+    </>
+  );
 }

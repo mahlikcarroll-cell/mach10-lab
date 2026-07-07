@@ -1,12 +1,9 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
-import CenterNode from "@/components/CenterNode";
 import ConnectionLines from "@/components/ConnectionLines";
 import Link from "next/link";
 import Blueprint from "@/components/blueprint";
-import { Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
 
 type QuadrantMenuProps = {
   activeQuadrant: string | null;

@@ -1,7 +1,19 @@
 "use client";
 
 import { animate, motion, useMotionValue } from "motion/react";
+import type { MotionStyle } from "motion/react";
 import { useRef, useState } from "react";
+
+type NodeStyle = MotionStyle & {
+  "--node-intensity": number;
+};
+
+const quadrantLinks: Record<string, string> = {
+  "lead-systems": "/lead-systems",
+  websites: "/websites",
+  "video-motion": "/video-motion",
+  "ai-infrastructure": "/ai-infrastructure",
+};
 
 type MenuPuckProps = {
   isOpen: boolean;
@@ -9,6 +21,7 @@ type MenuPuckProps = {
   setActiveQuadrant: (quadrant: string | null) => void;
   setDragIntensity: (intensity: number) => void;
   setNodePosition: (position: { x: number; y: number }) => void;
+  onNavigate: (href: string) => void;
 };
 
 export default function MenuPuck({
@@ -17,6 +30,7 @@ export default function MenuPuck({
   setActiveQuadrant,
   setDragIntensity,
   setNodePosition,
+  onNavigate,
 }: MenuPuckProps) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -36,7 +50,6 @@ export default function MenuPuck({
 
     setDragIntensity(intensity);
     setLocalIntensity(intensity);
-
     let nextQuadrant: string | null = null;
 
     if (distance >= 20) {
@@ -53,6 +66,12 @@ export default function MenuPuck({
   }
 
   function resetNode() {
+    const selectedQuadrant = lastQuadrant.current;
+    const selectedHref = selectedQuadrant
+      ? quadrantLinks[selectedQuadrant]
+      : undefined;
+    const shouldNavigate = Boolean(selectedHref && localIntensity > 0.35);
+
     lastQuadrant.current = null;
     setActiveQuadrant(null);
     setDragIntensity(0);
@@ -61,6 +80,10 @@ export default function MenuPuck({
 
     animate(x, 0, { type: "spring", stiffness: 400, damping: 38 });
     animate(y, 0, { type: "spring", stiffness: 400, damping: 38 });
+
+    if (shouldNavigate && selectedHref) {
+      onNavigate(selectedHref);
+    }
   }
 
   return (
@@ -99,7 +122,7 @@ export default function MenuPuck({
             x,
             y,
             "--node-intensity": localIntensity,
-          } as any
+          } as NodeStyle
         }
         onDrag={updateDragState}
         onDragEnd={resetNode}
