@@ -390,3 +390,54 @@ main {
 .mach10-menu-content {
   transform-origin: center center;
 }
+
+@media (max-width: 640px) {
+  .menu-puck-shell {
+    width: 69px;
+    height: 88px;
+  }
+
+  .center-node {
+    width: 69px;
+    height: 69px;
+  }
+
+  .center-node::before {
+    inset: -13px;
+  }
+
+  .center-node-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .floating-menu-label {
+    font-size: 0.6rem;
+  }
+
+  .mach10-menu-content {
+    width: min(90vw, 70svh);
+    height: min(90vw, 70svh);
+    padding: 0.75rem;
+  }
+
+  .quadrant-menu {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .quadrant {
+    padding: 0.75rem;
+    gap: 0.35rem;
+  }
+
+  .quadrant-label {
+    font-size: clamp(0.8rem, 3.8vw, 1.35rem);
+    line-height: 1.05;
+    text-align: center;
+  }
+
+  .quadrant-description {
+    display: none;
+  }
+}
