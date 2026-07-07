@@ -5,6 +5,9 @@ import path from "node:path";
 
 export default defineConfig({
   base: "./",
+  define: {
+    "process.env.NODE_ENV": JSON.stringify("production"),
+  },
   publicDir: false,
   plugins: [
     react(),
@@ -42,7 +45,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/mach10-menu-entry.tsx"),
       name: "Mach10Menu",
-      formats: ["iife"],
+      formats: ["es"],
       fileName: () => "mach10-menu.js",
       cssFileName: "mach10-menu",
     },

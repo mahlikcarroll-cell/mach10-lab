@@ -156,7 +156,7 @@ export default function MenuPuck({
       >
         <img
           className="center-node-icon"
-          src={getMach10AssetUrl("/images/mach10-icon.svg")}
+          src={getMach10AssetUrl("images/mach10-icon.svg")}
           alt=""
           aria-hidden="true"
         />

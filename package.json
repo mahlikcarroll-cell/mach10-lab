@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "build:wp-menu": "vite build --config vite.wp-menu.config.ts",
+    "package:wp-plugin": "powershell -ExecutionPolicy Bypass -File scripts/package-wp-plugin.ps1",
     "start": "next start",
     "lint": "eslint"
   },

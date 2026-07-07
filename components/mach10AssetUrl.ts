@@ -2,21 +2,24 @@ declare global {
   interface Window {
     Mach10MenuConfig?: {
       assetBase?: string;
+      debug?: boolean;
       rootId?: string;
     };
   }
 }
 
 export function getMach10AssetUrl(path: string) {
+  const normalizedPath = path.replace(/^\/+/, "");
+
   if (typeof window === "undefined") {
-    return path;
+    return `/${normalizedPath}`;
   }
 
   const assetBase = window.Mach10MenuConfig?.assetBase;
 
   if (!assetBase) {
-    return path;
+    return `/${normalizedPath}`;
   }
 
-  return `${assetBase.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+  return `${assetBase.replace(/\/+$/, "")}/${normalizedPath}`;
 }

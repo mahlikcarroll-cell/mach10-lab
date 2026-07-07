@@ -66,3 +66,44 @@ Enqueue `mach10-menu.css` and `mach10-menu.js` from WordPress. If the copied ass
 ```
 
 The script automatically finds `#mach10-menu-root` and renders the menu. Navigation uses normal browser URLs in WordPress, so the quadrant links should point to matching WordPress paths such as `/lead-systems`.
+
+## WordPress Plugin Package
+
+Build an installable plugin ZIP:
+
+```bash
+npm run package:wp-plugin
+```
+
+The package script runs `npm run build:wp-menu`, copies the built files into `wordpress-plugin/mach10-interactive-menu/assets/`, and creates:
+
+```text
+mach10-interactive-menu.zip
+```
+
+Upload that ZIP in WordPress:
+
+1. Go to Plugins > Add New Plugin > Upload Plugin.
+2. Choose `mach10-interactive-menu.zip`.
+3. Install and activate it.
+4. Add this shortcode in a Divi Code Module, Text Module, or page content:
+
+```text
+[mach10_menu]
+```
+
+The shortcode outputs:
+
+```html
+<div id="mach10-menu-root"></div>
+```
+
+The plugin enqueues `assets/mach10-menu.css` and `assets/mach10-menu.js` only for pages where the shortcode is used when WordPress can detect it. It also sets:
+
+```js
+window.Mach10MenuConfig = {
+  assetBase: "PLUGIN_URL/assets",
+};
+```
+
+To update the plugin after menu changes, run `npm run package:wp-plugin` again, then upload the new ZIP through WordPress. WordPress may ask you to replace the existing plugin; choose replace to update the bundled JS, CSS, and SVG assets.

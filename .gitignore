@@ -20,6 +20,9 @@
 # production
 /build
 /dist
+/mach10-interactive-menu.zip
+/wordpress-plugin/mach10-interactive-menu/assets/*
+!/wordpress-plugin/mach10-interactive-menu/assets/.gitkeep
 
 # misc
 .DS_Store
