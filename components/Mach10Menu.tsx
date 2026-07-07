@@ -59,18 +59,17 @@ export default function Mach10Menu() {
     if (previousQuadrantTimer.current) {
       clearTimeout(previousQuadrantTimer.current);
     }
-    setDragIntensity(0);
-    setNodePosition({ x: 0, y: 0 });
-
     setTimeout(() => {
-      setIsMenuVisible(false);
-    }, 420);
-  }
+  setDragIntensity(0);
+  setNodePosition({ x: 0, y: 0 });
+  setIsMenuVisible(false);
+  }, 420);
+}
 
   return (
     <>
       <MenuPuck
-        isOpen={isMenuVisible}
+  isOpen={isOpen}
         setIsOpen={(open) => {
           if (open) {
             setIsMenuVisible(true);

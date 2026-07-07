@@ -149,14 +149,6 @@ main {
   pointer-events: auto;
 }
 
-.menu-puck-shell.open {
-  translate: -50% -50%;
-}
-
-.menu-puck-shell.closed {
-  translate: 0 0;
-}
-
 .center-node {
   appearance: none;
   opacity: 1;
@@ -393,14 +385,6 @@ main {
   pointer-events: auto;
   opacity: 1;
   visibility: visible;
-}
-
-.menu-puck-shell.open {
-  translate: -50% -50%;
-}
-
-.menu-puck-shell.closed {
-  translate: 0 0;
 }
 
 .mach10-menu-content {

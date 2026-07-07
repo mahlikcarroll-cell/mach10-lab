@@ -74,42 +74,66 @@ export default function MenuPuck({
 
     lastQuadrant.current = null;
     setActiveQuadrant(null);
+
+    if (shouldNavigate && selectedHref) {
+      onNavigate(selectedHref);
+
+      setTimeout(() => {
+        x.set(0);
+        y.set(0);
+        setDragIntensity(0);
+        setLocalIntensity(0);
+        setNodePosition({ x: 0, y: 0 });
+      }, 520);
+
+      return;
+    }
+
     setDragIntensity(0);
     setLocalIntensity(0);
     setNodePosition({ x: 0, y: 0 });
 
     animate(x, 0, { type: "spring", stiffness: 400, damping: 38 });
     animate(y, 0, { type: "spring", stiffness: 400, damping: 38 });
-
-    if (shouldNavigate && selectedHref) {
-      onNavigate(selectedHref);
-    }
   }
 
   return (
     <motion.div
-  className={`menu-puck-shell ${isOpen ? "open" : "closed"}`}
-  initial={false}
-  animate={isOpen ? "open" : "closed"}
-  variants={{
-    closed: {
-      top: "2rem",
-      left: "calc(100% - 2rem - 86px)",
-      scale: 0.82,
-    },
-    open: {
-      top: "50%",
-      left: "50%",
-      scale: 1,
-    },
-  }}
-  transition={{
-    delay: isOpen ? 0 : 0.28,
-    type: "spring",
-    stiffness: 95,
-    damping: 17,
-  }}
->
+      className="menu-puck-shell"
+      animate={isOpen ? "open" : "closed"}
+      variants={{
+        closed: {
+          top: "2rem",
+          left: "calc(100% - 2rem - 86px)",
+          x: 0,
+          y: 0,
+          scale: 0.82,
+        },
+        open: {
+          top: "50%",
+          left: "50%",
+          x: "-50%",
+          y: "-50%",
+          scale: 1,
+        },
+      }}
+      transition={
+        isOpen
+          ? {
+              type: "tween",
+              stiffness: 95,
+              damping: 17,
+              ease: "easeOut",
+            }
+          : {
+              type: "tween",
+              delay: 0.8,
+              duration: 0.38,
+              damping: 17,
+              ease: "easeInOut",
+            }
+      }
+    >
       <motion.button
         className="center-node"
         onClick={() => !isOpen && setIsOpen(true)}
